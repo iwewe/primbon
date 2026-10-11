@@ -4,7 +4,7 @@ Laporan tafsir weton dari kitab Betaljemur Adammakna: masukkan tanggal lahir, la
 (kalender Sultan Agungan menurut Keraton Ngayogyakarta), kemudian susun tafsirnya menjadi satu laporan. Situs statis; seluruh hitungan
 berjalan di peramban dan data lahir hanya berada di fragmen alamat (`#d=...`), yang tidak pernah dikirim ke server.
 
-Rencana alamat: https://primbon.iww.my.id (belum dipublikasikan).
+Alamat: https://primbon.iww.my.id
 
 ## Isi laporan (rilis 1)
 

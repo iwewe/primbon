@@ -18,10 +18,10 @@ describe('aturan teks situs', () => {
       assert.ok(!/Karaton|Kraton\b/.test(isi), `${f}: ejaan Keraton salah`);
     }
   });
-  test('index.html berbahasa Indonesia dan memakai kunci tema Primbon', () => {
+  test('index.html berbahasa Indonesia dan memuat tema.js', () => {
     const h = readFileSync('index.html', 'utf8');
     assert.match(h, /<html lang="id">/);
-    assert.match(h, /primbon\.tema/);
+    assert.match(h, /src="\/tema\.js"/);
   });
   test('istilah: id unik, semua terisi, penilaian dijelaskan', () => {
     const id = ISTILAH.map(i => i.id);
@@ -34,6 +34,26 @@ describe('aturan teks situs', () => {
     assert.ok(BATAS.some(t => /nasihat medis/.test(t)));
     assert.ok(TIDAK_DIMUAT.some(t => /ritual/i.test(t)));
     assert.equal(LANGKAH.length, 4);
+  });
+});
+
+describe('siap CSP ketat (tanpa inline script, style, atau atribut style)', () => {
+  test('index.html: tanpa <script> sebaris, tanpa <style>, tanpa atribut style', () => {
+    const h = readFileSync('index.html', 'utf8');
+    for (const m of h.matchAll(/<script\b([^>]*)>/g)) assert.match(m[1], /\bsrc=/, `script sebaris: <script${m[1]}>`);
+    assert.ok(!/<style\b/.test(h), 'ada <style> sebaris');
+    assert.ok(!/\sstyle=/.test(h), 'ada atribut style');
+  });
+  test('kode situs tidak membuat atribut style, handler on*=, atau eval', () => {
+    for (const f of berkas) {
+      const isi = readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+      assert.ok(!/\sstyle=/.test(isi), `${f}: atribut style sebaris`);
+      assert.ok(!/\son(click|load|error|submit|change|input)=/i.test(isi), `${f}: handler sebaris`);
+      assert.ok(!/\beval\s*\(|new Function\s*\(|setTimeout\s*\(\s*['"`]/.test(isi), `${f}: eval atau setara`);
+    }
+  });
+  test('tema.js ada di public dan memakai kunci tema Primbon', () => {
+    assert.match(readFileSync('public/tema.js', 'utf8'), /primbon\.tema/);
   });
 });
 

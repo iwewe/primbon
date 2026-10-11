@@ -347,6 +347,15 @@ select.isian { appearance: auto; padding-right: 8px; }
   .hasil-aksi .btn { flex: 1 1 100%; }
 }
 
+/* ---------- Pembantu kecil (pengganti style sebaris, agar CSP ketat) ---------- */
+.jarak-atas { margin-top: 12px; }
+.jarak-sedang { margin-top: 10px; }
+.paragraf-kartu { margin-top: 8px; font-size: 15px; line-height: 1.55; }
+.label-legend { font-size: 14px; font-weight: 600; padding: 0; }
+.tanpa-js { max-width: 560px; margin: 0 auto; padding: 48px 16px; font-family: system-ui, sans-serif; line-height: 1.6; color: #1A1830; }
+.tanpa-js-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #7E420F; }
+.tanpa-js-judul { font-weight: 500; font-size: 32px; line-height: 1.15; margin: 8px 0 12px; }
+
 /* ---------- Cetak: laporan tanpa bilah dan tombol ---------- */
 @media print {
   .atas, .nav-bawah, .nav-atas, .isi-nav, .hasil-aksi, .lewati, #lapisan { display: none !important; }

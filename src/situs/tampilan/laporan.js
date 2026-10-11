@@ -62,7 +62,7 @@ export function bukaLaporan(root, ctx) {
   try {
     l = bangunLaporan(masukan);
   } catch {
-    root.innerHTML = `<div class="halaman"><div class="kartu"><h1 class="judul-halaman" tabindex="-1">Laporan tidak dapat disusun</h1><p class="lead">Tanggal ini di luar rentang yang dapat dihitung.</p><p style="margin-top:12px"><a class="btn btn-polos" href="/">Ubah data</a></p></div></div>`;
+    root.innerHTML = `<div class="halaman"><div class="kartu"><h1 class="judul-halaman" tabindex="-1">Laporan tidak dapat disusun</h1><p class="lead">Tanggal ini di luar rentang yang dapat dihitung.</p><p class="jarak-atas"><a class="btn btn-polos" href="/">Ubah data</a></p></div></div>`;
     return;
   }
   const dasar = paramDariMasukan(masukan).toString();
@@ -92,7 +92,7 @@ export function bukaLaporan(root, ctx) {
     <div class="laporan-isi">
       <section class="kartu" aria-labelledby="h-baca"><h2 id="h-baca">Cara membaca</h2>
         <p class="lead">${esc(l.catatan)} Lapisan tafsir bisa saling bertentangan; kitab memang berlapis. Tiap butir memuat sumber bab dan halaman cetak kitab.</p>
-        <p class="lead" style="margin-top:10px">Penilaian di setiap butir adalah klasifikasi situs ini agar mudah dibaca:
+        <p class="lead jarak-sedang">Penilaian di setiap butir adalah klasifikasi situs ini agar mudah dibaca:
           ${tag('baik')} kitab menyebutnya baik, ${tag('waspada')} kitab menyebutnya kurang baik, ${tag('netral')} tidak condong ke salah satu. <a href="/istilah#penilaian">Selengkapnya</a></p></section>
       ${l.bagian.map(htmlBagian).join('')}
       <p class="penutup">Hitungan mengikuti kalender Jawa Sultan Agungan menurut Keraton Ngayogyakarta. Tafsir berasal dari kitab Betaljemur Adammakna yang ditulis ulang. <a href="/tentang">Cara menghitung dan sumbernya</a></p>

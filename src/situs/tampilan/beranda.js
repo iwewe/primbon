@@ -36,7 +36,7 @@ function htmlFormulir(isi) {
       <h2 id="judul-form">Data lahir</h2>
       <div class="medan"><label for="f-nama">Nama <small>(opsional)</small></label>
         <input class="isian" id="f-nama" name="nama" type="text" autocomplete="off" maxlength="60" placeholder="Untuk bagian tentang nama" value="${esc(isi ? isi.nama : '')}"></div>
-      <fieldset class="medan" aria-describedby="g-tanggal"><legend class="label" style="font-size:14px;font-weight:600;padding:0">Tanggal lahir</legend>
+      <fieldset class="medan" aria-describedby="g-tanggal"><legend class="label label-legend">Tanggal lahir</legend>
         <div class="baris-tanggal">
           <div class="medan"><label for="f-tgl">Tanggal</label><input class="isian" id="f-tgl" name="tgl" inputmode="numeric" maxlength="2" autocomplete="off" value="${esc(d)}"></div>
           <div class="medan"><label for="f-bln">Bulan</label><select class="isian" id="f-bln" name="bln">${opsiBulan(m)}</select></div>

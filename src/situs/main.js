@@ -91,7 +91,7 @@ function bukaLaporanMalas(akar) {
     })
     .catch(() => {
       if (giliran !== muatLaporan) return;
-      akar.innerHTML = '<div class="halaman"><div class="kartu"><h1 class="judul-halaman" tabindex="-1">Laporan belum dapat dimuat</h1><p class="lead">Bagian ini perlu diunduh dan tampaknya sambungan internet terputus. Coba lagi setelah tersambung.</p><p style="margin-top:12px"><a class="btn btn-polos" href="/">Kembali ke beranda</a></p></div></div>';
+      akar.innerHTML = '<div class="halaman"><div class="kartu"><h1 class="judul-halaman" tabindex="-1">Laporan belum dapat dimuat</h1><p class="lead">Bagian ini perlu diunduh dan tampaknya sambungan internet terputus. Coba lagi setelah tersambung.</p><p class="jarak-atas"><a class="btn btn-polos" href="/">Kembali ke beranda</a></p></div></div>';
     });
 }
 

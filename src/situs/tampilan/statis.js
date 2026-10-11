@@ -54,7 +54,7 @@ export function bukaTentang(root) {
     <section class="kartu" aria-labelledby="h-tidak"><h2 id="h-tidak">Yang sengaja tidak dimuat</h2>
       <ul class="daftar-batas">${TIDAK_DIMUAT.map(t => `<li>${esc(t)}</li>`).join('')}</ul></section>
     <section class="kartu" aria-labelledby="h-privasi"><h2 id="h-privasi">Privasi</h2>
-      <p style="margin-top:8px;font-size:15px;line-height:1.55">Semua hitungan berjalan di peramban Anda. Tidak ada akun, dan data lahir tidak dikirim ke server mana pun: data hanya ada di bagian setelah tanda # pada alamat laporan, yang tidak pernah dikirim peramban. Siapa pun yang Anda beri tautan laporan akan melihat data itu.</p></section>
+      <p class="paragraf-kartu">Semua hitungan berjalan di peramban Anda. Tidak ada akun, dan data lahir tidak dikirim ke server mana pun: data hanya ada di bagian setelah tanda # pada alamat laporan, yang tidak pernah dikirim peramban. Siapa pun yang Anda beri tautan laporan akan melihat data itu.</p></section>
     <section class="kartu" aria-labelledby="h-lisensi"><h2 id="h-lisensi">Lisensi dan kredit</h2>
       <p class="kutipan">Hak cipta &copy; 2026 Iwewe. Lisensi MIT.</p>
       <dl class="baris-info">

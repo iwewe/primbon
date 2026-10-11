@@ -23,7 +23,11 @@ const lahir = 'd=1990-05-17&t=19:00&n=Wirya';
   /* 1. alur formulir sampai laporan */
   {
     const { ctx, p } = await baru();
-    await p.goto(BASE + '/', { waitUntil: 'networkidle' });
+    const resp = await p.goto(BASE + '/', { waitUntil: 'networkidle' });
+    if (process.env.CEK_CSP) { // hanya untuk server yang memasang CSP (nginx), bukan `vite preview`
+      const csp = resp.headers()['content-security-policy'] || '';
+      ok('CSP: header ketat terpasang (default-src, script-src, style-src, frame-ancestors)', ["default-src 'self'", "script-src 'self'", "style-src 'self'", "frame-ancestors 'self'", "object-src 'none'"].every(k => csp.includes(k)) && !csp.includes('unsafe'), csp);
+    }
     ok('beranda: judul dokumen berbahasa Indonesia', (await p.title()) === 'Primbon: laporan tafsir weton', await p.title());
     ok('beranda: halaman berbahasa id', (await p.getAttribute('html', 'lang')) === 'id');
     await p.click('button[type=submit]');
