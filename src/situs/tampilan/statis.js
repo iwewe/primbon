@@ -33,6 +33,23 @@ export function bukaIstilah(root) {
   if (location.hash && !location.hash.includes('=')) document.getElementById(location.hash.slice(1))?.scrollIntoView();
 }
 
+/* ---------------------------------------------------------------- Lainnya */
+const LAINNYA = [
+  ['/rumah', 'Rumah', 'Arah hadap, hari mulai membangun, ukuran, sumur, pintu halaman, dan lahan'],
+  ['/bepergian', 'Bepergian', 'Arah dan waktu berangkat, pindah kediaman, menghadap pejabat'],
+  ['/hajatan', 'Hajatan', 'Tarub, tingkeb, jadwal kehamilan, dan jadwal bayi'],
+  ['/istilah', 'Istilah', 'Arti istilah yang dipakai di laporan'],
+  ['/tentang', 'Tentang', 'Cara menghitung, sumber, batas, privasi, dan lisensi']
+];
+export function bukaLainnya(root) {
+  root.innerHTML = `
+  <div class="teks-halaman">
+    <header><h1 class="judul-halaman" id="judul-lainnya" tabindex="-1">Lainnya</h1><p class="lead">Alat dan halaman lain di Primbon.</p></header>
+    <ul class="menu-daftar menu-keterangan">${LAINNYA.map(([href, nama, ket]) => `<li><a href="${href}"><span><b>${nama}</b><small>${esc(ket)}</small></span>${IKON.kanan(20)}</a></li>`).join('')}</ul>
+  </div>`;
+  document.title = 'Lainnya · Primbon';
+}
+
 /* ---------------------------------------------------------------- Tentang */
 export function bukaTentang(root) {
   const tabel = (judul, baris) =>

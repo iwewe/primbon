@@ -20,7 +20,18 @@ rezeki dan arah · kesehatan menurut kitab. Tiap butir memuat rujukan bab dan ha
   Hari tanpa catatan berarti kitab tidak menyebutnya, bukan berarti hari itu baik.
 * **Jam** (`/jam`): tujuh saat siang, siang dan malam, jam sial dan baik, saat malaikat, urusan perkara, dan akad nikah. Bila jam diisi, baris yang memuatnya ditandai.
 
-Alamat: `/jodoh#a=...&b=...`, `/hari#d=YYYY-MM-DD&u=nikah`, `/jam#d=YYYY-MM-DD&t=HH:MM`; seluruh data tetap di fragmen. Rilis berikutnya: rumah, bepergian, hajatan.
+Alamat: `/jodoh#a=...&b=...`, `/hari#d=YYYY-MM-DD&u=nikah`, `/jam#d=YYYY-MM-DD&t=HH:MM`; seluruh data tetap di fragmen. 
+## Alat lain (rilis 3)
+
+* **Rumah** (`/rumah#k=...`): arah hadap menurut weton pemilik, hari mulai membangun, hitungan ukuran (usuk, rangka, anak tangga, balai-balai, jarak sumur),
+  letak sumur, pintu halaman, dan bentuk lahan.
+* **Bepergian** (`/bepergian#d=...&g=...`): arah (naga, kala, rijalolah, hari hidup dan mati, arah nafkah) dengan arah tujuan ditandai, waktu berangkat,
+  pindah kediaman, dan menghadap pejabat.
+* **Hajatan** (`/hajatan#k=tarub|tingkeb|kehamilan|bayi&d=...`): tanggal acara adat: memasang tarub, tingkeb, jadwal kehamilan, dan jadwal bayi (nama bayi opsional).
+  Hanya tanggal yang dihitung.
+* **Lainnya** (`/lainnya`): pintu ke Rumah, Bepergian, Hajatan, Istilah, dan Tentang. Menu utama: Laporan, Jodoh, Hari baik, Jam, Lainnya.
+
+**Disaring dari Hajatan:** "Tetesan" pada jadwal bayi (khitan perempuan) dan penilaian jam bayi lahir (mendorong mengatur waktu persalinan); tes menjaga keduanya tetap tidak tampil.
 
 **Sengaja tidak dimuat:** ritual, sesaji, doa, mantra, ramuan; watak perempuan menurut weton; penilaian dari penampilan atau ciri tubuh;
 bagian yang mengaitkan kecacatan anak dengan perilaku orang tua. Tafsir adalah tradisi, bukan ramalan dan bukan fakta ilmiah.

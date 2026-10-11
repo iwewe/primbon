@@ -1,7 +1,7 @@
 const { chromium } = require(process.env.PLAYWRIGHT_CORE || 'playwright-core');
 const BASE = process.env.BASE || 'http://127.0.0.1:4176';
 const lahir = 'd=1990-05-17&t=19:00&n=Wirya';
-const HALAMAN = [['/', 'beranda'], ['/laporan#' + lahir, 'laporan'], ['/laporan#d=1990-05-17', 'laporan-polos'], ['/jodoh', 'jodoh-form'], ['/jodoh#a=1990-05-17&na=Budi&b=1992-11-03&tb=19:00&nb=Siti', 'jodoh'], ['/hari#d=2026-10-17&u=nikah', 'hari'], ['/jam#d=2026-10-17&t=09:30', 'jam'], ['/istilah', 'istilah'], ['/tentang', 'tentang'], ['/tidak-ada', '404']];
+const HALAMAN = [['/', 'beranda'], ['/laporan#' + lahir, 'laporan'], ['/laporan#d=1990-05-17', 'laporan-polos'], ['/jodoh', 'jodoh-form'], ['/jodoh#a=1990-05-17&na=Budi&b=1992-11-03&tb=19:00&nb=Siti', 'jodoh'], ['/hari#d=2026-10-17&u=nikah', 'hari'], ['/jam#d=2026-10-17&t=09:30', 'jam'], ['/lainnya', 'lainnya'], ['/rumah', 'rumah-form'], ['/rumah#k=hari&d=2026-10-20', 'rumah-hari'], ['/rumah#k=pintu&m=194&h=Timur&p=12&x=3', 'rumah-pintu'], ['/rumah#k=lahan', 'rumah-lahan'], ['/bepergian#d=2026-10-20&g=Timur', 'bepergian'], ['/hajatan#k=bayi&d=2026-10-20&n=Arya', 'hajatan-bayi'], ['/hajatan#k=kehamilan&d=2026-10-11', 'hajatan-hamil'], ['/hajatan#k=tarub&d=2026-10-20', 'hajatan-tarub'], ['/istilah', 'istilah'], ['/tentang', 'tentang'], ['/tidak-ada', '404']];
 (async () => {
   const b = await chromium.launch({ executablePath: process.env.CHROME_PATH, args: ['--no-sandbox', ...(process.env.HOST_MAP ? ['--host-resolver-rules=' + process.env.HOST_MAP] : [])] });
   const temuan = { sentuh: [], huruf: [], kontras: [], melebar: [], inggris: [], nama: [] };

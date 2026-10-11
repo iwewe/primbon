@@ -29,6 +29,9 @@ function htmlHero() {
       <a href="/jodoh"><b>Jodoh</b><span>Kecocokan dua weton dan nama</span></a>
       <a href="/hari"><b>Hari baik</b><span>Tinjau satu tanggal untuk suatu keperluan</span></a>
       <a href="/jam"><b>Jam</b><span>Saat baik dan buruk pada suatu hari</span></a>
+      <a href="/rumah"><b>Rumah</b><span>Arah hadap, hari membangun, ukuran, sumur, pintu</span></a>
+      <a href="/bepergian"><b>Bepergian</b><span>Arah dan waktu berangkat</span></a>
+      <a href="/hajatan"><b>Hajatan</b><span>Tarub, tingkeb, jadwal kehamilan dan bayi</span></a>
     </nav>
   </section>`;
 }

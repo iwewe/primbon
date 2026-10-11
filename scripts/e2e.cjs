@@ -139,8 +139,8 @@ const lahir = 'd=1990-05-17&t=19:00&n=Wirya';
   {
     const { ctx, p } = await baru();
     await p.goto(BASE + '/', { waitUntil: 'networkidle' });
-    ok('beranda: tiga alat lain tertaut', (await p.$$eval('.alat-lain a', a => a.map(x => x.getAttribute('href')).join())) === '/jodoh,/hari,/jam');
-    ok('menu atas memuat Jodoh, Hari baik, Jam dan tautan Istilah', (await p.$$eval('.nav-atas a', a => a.map(x => x.textContent).join('|'))) === 'Laporan|Jodoh|Hari baik|Jam|Tentang' && (await p.isVisible('.tautan-atas')));
+    ok('beranda: enam alat lain tertaut', (await p.$$eval('.alat-lain a', a => a.map(x => x.getAttribute('href')).join())) === '/jodoh,/hari,/jam,/rumah,/bepergian,/hajatan');
+    ok('menu atas memuat Jodoh, Hari baik, Jam dan tautan Istilah', (await p.$$eval('.nav-atas a', a => a.map(x => x.textContent).join('|'))) === 'Laporan|Jodoh|Hari baik|Jam|Lainnya' && (await p.$$eval('.tautan-atas', a => a.map(x => x.textContent).join())) === 'Istilah,Tentang');
     /* Jodoh */
     await p.click('.alat-lain a[href="/jodoh"]');
     await p.waitForSelector('#form-jodoh');
@@ -220,6 +220,109 @@ const lahir = 'd=1990-05-17&t=19:00&n=Wirya';
       ok(`ponsel 320: ${jalur.split('#')[0]} tanpa gulir horizontal`, await p.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), await p.evaluate(() => document.documentElement.scrollWidth));
     }
     ok('ponsel 320: tabel jam menjadi kartu bertumpuk (label kolom tampil)', await p.evaluate(() => getComputedStyle(document.querySelector('.tabel-bertumpuk td'), '::before').content !== 'none'));
+    await ctx.close();
+  }
+
+  /* Rilis 3: Rumah, Bepergian, Hajatan, dan halaman Lainnya */
+  {
+    const { ctx, p } = await baru();
+    await p.goto(BASE + '/lainnya', { waitUntil: 'networkidle' });
+    ok('lainnya: lima tautan (Rumah, Bepergian, Hajatan, Istilah, Tentang) dan menu Lainnya aktif', (await p.$$eval('.menu-keterangan a', a => a.map(x => x.getAttribute('href')).join())) === '/rumah,/bepergian,/hajatan,/istilah,/tentang' && (await p.getAttribute('.nav-atas a[href="/lainnya"]', 'aria-current')) === 'page');
+    /* Rumah */
+    await p.click('.menu-keterangan a[href="/rumah"]');
+    await p.waitForSelector('#form-rumah');
+    ok('rumah: awal pada Arah hadap rumah; judul dokumen', (await p.inputValue('#r-k')) === 'arah' && (await p.title()) === 'Arah hadap rumah · Rumah · Primbon', await p.title());
+    ok('lainnya: menu tetap aktif di halaman Rumah', (await p.getAttribute('.nav-atas a[href="/lainnya"]', 'aria-current')) === 'page');
+    await p.click('#form-rumah button[type=submit]');
+    ok('rumah arah: tanpa isian memberi galat dan fokus ke tahun', (await p.isVisible('#g-r')) && (await p.evaluate(() => document.activeElement.id)) === 'r-thn');
+    await p.fill('#r-tgl', '17'); await p.selectOption('#r-bln', '5'); await p.fill('#r-thn', '1990');
+    await p.click('#form-rumah button[type=submit]');
+    await p.waitForSelector('#judul-rumah');
+    await p.waitForFunction(() => document.querySelector('#judul-rumah')?.textContent === 'Menghadap Barat');
+    ok('rumah arah: lahir 17 Mei 1990 menghadap Barat; alamat berfragmen', /\/rumah#k=arah&d=1990-05-17/.test(p.url()) && !p.url().includes('?'), p.url());
+    await p.selectOption('#r-k', 'hari');
+    await p.waitForFunction(() => document.querySelector('#judul-rumah')?.textContent === 'Minggu Legi');
+    ok('rumah hari: mengganti pemeriksaan memuat isian hari dan memakai hari ini', (await p.inputValue('#r-tgl')) === '11' && /k=hari/.test(p.url()) && (await p.$$eval('.bagian > h2', h => h.map(x => x.textContent).join('|'))).includes('Mendirikan rumah'));
+    await p.selectOption('#r-k', 'ukuran');
+    await p.waitForSelector('#r-jumlah');
+    await p.fill('#r-jumlah', '0');
+    await p.click('#form-rumah button[type=submit]');
+    ok('rumah ukuran: jumlah nol ditolak', (await teks(p, '#g-r-jumlah')).includes('bilangan bulat positif'));
+    await p.fill('#r-jumlah', '37');
+    await p.click('#form-rumah button[type=submit]');
+    await p.waitForFunction(() => document.querySelector('#judul-rumah')?.textContent === 'Kitri');
+    ok('rumah ukuran: usuk terakhir 37 = Kitri (baik)', (await teks(p, '#ukuran')).includes('Baik'));
+    await p.selectOption('#r-k', 'sumur');
+    await p.waitForSelector('#r-sumur');
+    await p.selectOption('#r-hadap', 'Utara'); await p.selectOption('#r-sumur', 'Barat Daya');
+    await p.click('#form-rumah button[type=submit]');
+    await p.waitForFunction(() => document.querySelector('#judul-rumah')?.textContent === 'Sumur di Barat Daya');
+    ok('rumah sumur: barat daya dinilai waspada', (await teks(p, '#sumur')).includes('Waspada'));
+    await p.selectOption('#r-k', 'pintu');
+    await p.waitForSelector('#r-panjang');
+    await p.fill('#r-panjang', '12'); await p.fill('#r-posisi', '15');
+    await p.click('#form-rumah button[type=submit]');
+    ok('rumah pintu: posisi melebihi panjang ditolak', (await teks(p, '#g-r-posisi')).includes('di antara 0 dan panjang'));
+    await p.fill('#r-posisi', '3');
+    await p.click('#form-rumah button[type=submit]');
+    await p.waitForFunction(() => document.querySelector('#judul-rumah')?.textContent === 'Bagian ke-2 dari 5');
+    ok('rumah pintu: sisi Utara 12 posisi 3 = bagian ke-2 dari 5', /m=194/.test(p.url()));
+    await p.selectOption('#r-k', 'lahan');
+    await p.waitForSelector('#lahan'); // bentuk lahan tanpa isian: hasil langsung tampil
+    ok('rumah lahan: 26 keadaan lahan', (await p.$$eval('#lahan .butir', b => b.length)) === 26);
+    ok('rumah: catatan bukan pengganti perencanaan teknik tampil', (await teks(p, 'main')).includes('perencanaan teknik dan keselamatan bangunan'));
+    ok('rumah: tanpa galat skrip', p.galat.length === 0, p.galat.join('|'));
+    const luarR = [...new Set(p.urls.map(u => new URL(u).host))].filter(h => h !== new URL(BASE).host && h !== 'static.cloudflareinsights.com');
+    ok('privasi: rumah tanpa host luar', luarR.length === 0, luarR.join(','));
+    await ctx.close();
+  }
+  {
+    const { ctx, p } = await baru();
+    /* Bepergian */
+    await p.goto(BASE + '/bepergian', { waitUntil: 'networkidle' });
+    await p.waitForSelector('#judul-bepergian');
+    ok('bepergian: tanpa data memakai hari ini dan tanpa bagian tujuan', (await teks(p, '#judul-bepergian')) === 'Minggu Legi' && (await p.$('#tujuan')) === null);
+    await p.fill('#bp-tgl', '20'); await p.selectOption('#bp-tujuan', 'Timur');
+    await p.click('#form-bepergian button[type=submit]');
+    await p.waitForSelector('#tujuan');
+    ok('bepergian: 20 Okt 2026 ke Timur; alamat memuat tujuan', (await teks(p, '#judul-bepergian')) === 'Selasa Kliwon' && /\/bepergian#d=2026-10-20&g=Timur/.test(p.url()) && !p.url().includes('?'), p.url());
+    const ditandai = await p.$$eval('#arah tr.kini', r => r.length);
+    const dibagian = await p.$$eval('#tujuan .butir', r => r.length);
+    ok('bepergian: baris arah tujuan ditandai sama banyak dengan catatan tujuan', ditandai > 0 && ditandai === dibagian, `${ditandai} vs ${dibagian}`);
+    ok('bepergian: bagian waktu, pindah kediaman, dan menghadap pejabat ada', (await p.$$eval('.bagian > h2', h => h.map(x => x.textContent).join('|'))).includes('Waktu berangkat') && (await teks(p, '#urusan')).includes('Menghadap pejabat'));
+    ok('bepergian: catatan keselamatan perjalanan', (await teks(p, 'main')).includes('keselamatan perjalanan'));
+    ok('bepergian: tanpa galat skrip', p.galat.length === 0, p.galat.join('|'));
+    /* Hajatan */
+    await p.goto(BASE + '/hajatan', { waitUntil: 'networkidle' });
+    await p.waitForSelector('#judul-hajatan');
+    ok('hajatan: awal pada Memasang tarub dengan hari ini', (await p.inputValue('#hj-k')) === 'tarub' && (await p.inputValue('#hj-tgl')) === '11');
+    await p.selectOption('#hj-k', 'bayi');
+    await p.waitForSelector('#hj-nama');
+    await p.fill('#hj-tgl', '20'); await p.fill('#hj-nama', 'Arya');
+    await p.click('#form-hajatan button[type=submit]');
+    await p.waitForSelector('#nama-bayi');
+    ok('hajatan bayi: alamat berfragmen; delapan tahap peringatan; nama dihitung', /\/hajatan#k=bayi&d=2026-10-20&n=Arya/.test(p.url()) && (await p.$$eval('#bayi tbody tr', r => r.length)) === 10 && (await teks(p, '#nama-bayi')).includes('Hitungan tidak cocok'), p.url());
+    ok('hajatan bayi: Tetesan (khitan perempuan) tidak ditampilkan', !/tetesan/i.test(await teks(p, 'main')));
+    ok('hajatan: catatan bukan panduan kehamilan dan anjuran tenaga kesehatan', (await teks(p, 'main')).includes('anjuran tenaga kesehatan'));
+    ok('hajatan bayi: tanpa penilaian jam bayi lahir', !/jam (bayi )?lahir|saat bayi lahir/i.test(await teks(p, 'main')));
+    await p.selectOption('#hj-k', 'kehamilan');
+    await p.waitForFunction(() => /k=kehamilan/.test(location.hash));
+    await p.click('#form-hajatan button[type=submit]');
+    await p.waitForSelector('#kehamilan');
+    ok('hajatan kehamilan: sembilan bulan', (await p.$$eval('#kehamilan tbody tr', r => r.length)) === 9);
+    ok('hajatan: tanpa galat skrip', p.galat.length === 0, p.galat.join('|'));
+    const luarH = [...new Set(p.urls.map(u => new URL(u).host))].filter(h => h !== new URL(BASE).host && h !== 'static.cloudflareinsights.com');
+    ok('privasi: bepergian dan hajatan tanpa host luar dan tanpa permintaan berisi nama bayi', luarH.length === 0 && p.urls.every(u => !/Arya/.test(decodeURIComponent(u))), luarH.join(','));
+    await ctx.close();
+  }
+  {
+    const { ctx, p } = await baru({ viewport: { width: 320, height: 800 } });
+    for (const jalur of ['/lainnya', '/rumah#k=hari&d=2026-10-20', '/rumah#k=lahan', '/bepergian#d=2026-10-20&g=Timur', '/hajatan#k=bayi&d=2026-10-20&n=Arya', '/hajatan#k=kehamilan&d=2026-10-11']) {
+      await p.goto(BASE + jalur, { waitUntil: 'networkidle' });
+      await p.waitForSelector('h1');
+      await p.waitForTimeout(200);
+      ok(`ponsel 320: ${jalur} tanpa gulir horizontal`, await p.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), await p.evaluate(() => document.documentElement.scrollWidth));
+    }
     await ctx.close();
   }
 

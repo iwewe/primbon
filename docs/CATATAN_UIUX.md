@@ -23,7 +23,9 @@ Tata letak, warna, huruf, ilustrasi, ornamen, ikon, gerak, dan bentuk daftar isi
 ## Halaman
 Beranda (pengantar, tautan alat, formulir) · Laporan (hero weton, ringkasan lima fakta, daftar isi, tujuh bagian) · Jodoh (dua formulir pihak,
 tiga bagian hasil) · Hari baik (formulir, rincian per keperluan, daftar 14 hari) · Jam (formulir, enam tabel saat, baris yang memuat jam pengguna ditandai) ·
-Istilah · Tentang · 404.
+Rumah (pilihan pemeriksaan mengganti isian; hasil bergantung pilihan) · Bepergian (arah tujuan menandai baris tabel arah) · Hajatan (empat mode; tabel jadwal) ·
+Lainnya (pintu ke Rumah, Bepergian, Hajatan, Istilah, Tentang) · Istilah · Tentang · 404.
+Menu utama (bawah di ponsel, atas di desktop): Laporan, Jodoh, Hari baik, Jam, Lainnya; Istilah dan Tentang juga di sisi kanan header desktop.
 
 Model alat (`alat.js`) memakai butir yang sama dengan laporan, ditambah `ringkasan` ({baik, waspada, netral}) per bagian dan `tanda` pada butir tabel
 (baris yang ditandai). Tabel jam memakai kelas `.tabel-bertumpuk`: tabel di layar lebar, kartu bertumpuk dengan label kolom di ponsel.

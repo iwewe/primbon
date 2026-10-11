@@ -7,7 +7,7 @@ import { tandaMerek, IKON } from './logo.js';
 import { buatRouter } from './router.js';
 import { sekarangLokal } from './format.js';
 import { bukaBeranda } from './tampilan/beranda.js';
-import { bukaTentang, bukaIstilah, bukaTidakAda } from './tampilan/statis.js';
+import { bukaTentang, bukaIstilah, bukaLainnya, bukaTidakAda } from './tampilan/statis.js';
 
 const SIMPAN_TEMA = 'primbon.tema';
 const JUDUL_BAWAAN = 'Primbon: laporan tafsir weton';
@@ -42,7 +42,7 @@ const MENU = [
   { jalur: '/jodoh', nama: 'Jodoh', ikon: 'pembanding', aktif: ['/jodoh'] },
   { jalur: '/hari', nama: 'Hari baik', ikon: 'kalender', aktif: ['/hari'] },
   { jalur: '/jam', nama: 'Jam', ikon: 'jam', aktif: ['/jam'] },
-  { jalur: '/tentang', nama: 'Tentang', ikon: 'info', aktif: ['/tentang', '/istilah'] }
+  { jalur: '/lainnya', nama: 'Lainnya', ikon: 'lainnya', aktif: ['/lainnya', '/rumah', '/bepergian', '/hajatan', '/tentang', '/istilah'] }
 ];
 
 function kerangka() {
@@ -53,6 +53,7 @@ function kerangka() {
     <nav class="nav-atas" aria-label="Navigasi utama">${MENU.map(m => `<a href="${m.jalur}" data-menu="${m.jalur}">${m.nama}</a>`).join('')}</nav>
     <div class="atas-kanan">
       <a class="tautan-atas" href="/istilah">Istilah</a>
+      <a class="tautan-atas" href="/tentang">Tentang</a>
       <button class="tombol-ikon" id="tema" type="button">${`<span class="i-bulan">${IKON.bulan(20)}</span><span class="i-matahari">${IKON.matahari(20)}</span>`}</button>
     </div>
   </div></header>
@@ -88,7 +89,10 @@ const MALAS = {
   '/laporan': { judul: 'Menyusun laporan…', impor: () => import('./tampilan/laporan.js'), fungsi: 'bukaLaporan' },
   '/jodoh': { judul: 'Memuat jodoh…', impor: () => import('./tampilan/jodoh.js'), fungsi: 'bukaJodoh' },
   '/hari': { judul: 'Memuat hari baik…', impor: () => import('./tampilan/hari.js'), fungsi: 'bukaHari' },
-  '/jam': { judul: 'Memuat jam…', impor: () => import('./tampilan/jam.js'), fungsi: 'bukaJam' }
+  '/jam': { judul: 'Memuat jam…', impor: () => import('./tampilan/jam.js'), fungsi: 'bukaJam' },
+  '/rumah': { judul: 'Memuat rumah…', impor: () => import('./tampilan/rumah.js'), fungsi: 'bukaRumah' },
+  '/bepergian': { judul: 'Memuat bepergian…', impor: () => import('./tampilan/bepergian.js'), fungsi: 'bukaBepergian' },
+  '/hajatan': { judul: 'Memuat hajatan…', impor: () => import('./tampilan/hajatan.js'), fungsi: 'bukaHajatan' }
 };
 let muatTerakhir = 0;
 function bukaMalas(jalur, akar) {
@@ -120,6 +124,10 @@ function mulai() {
       '/jodoh': a => bukaMalas('/jodoh', a),
       '/hari': a => bukaMalas('/hari', a),
       '/jam': a => bukaMalas('/jam', a),
+      '/rumah': a => bukaMalas('/rumah', a),
+      '/bepergian': a => bukaMalas('/bepergian', a),
+      '/hajatan': a => bukaMalas('/hajatan', a),
+      '/lainnya': a => bukaLainnya(a, ctx),
       '/istilah': a => bukaIstilah(a, ctx),
       '/tentang': a => bukaTentang(a, ctx)
     },

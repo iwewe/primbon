@@ -248,6 +248,8 @@ select.isian { appearance: auto; padding-right: 8px; }
 .menu-daftar li:first-child a { border-top: 0; }
 .menu-daftar a:hover { background: var(--accent-soft); }
 .menu-daftar svg { color: var(--muted); flex: none; }
+.menu-keterangan b { display: block; font-size: 16px; }
+.menu-keterangan small { display: block; font-size: 13px; color: var(--muted); font-weight: 400; margin-top: 2px; }
 .cari-istilah { max-width: 560px; }
 .glos-daftar { list-style: none; }
 .glos-daftar li { padding: 14px 0; border-top: 1px solid var(--line); scroll-margin-top: 80px; }
@@ -413,3 +415,4 @@ select.isian { appearance: auto; padding-right: 8px; }
   .butir { break-inside: avoid; }
   main { padding-bottom: 0; }
 }
+.menu-keterangan a { padding-top: 10px; padding-bottom: 10px; }

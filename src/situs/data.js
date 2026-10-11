@@ -32,6 +32,12 @@ export const ISTILAH = [
   { id: 'saat-dua-belas', istilah: 'Siang dan malam', arti: 'Pembagian hari menjadi sepuluh bagian, lima di siang dan lima di malam. Nilainya berbeda menurut jumlah neptu hari itu: Ayu, Srilungguh, Srigumelar dianggap baik; Sampar, Pacak, Kala penganten, Kalaluweng dihindari (bab 146).' },
   { id: 'saat-malaikat', istilah: 'Saat malaikat', arti: 'Pembagian jam siang menurut nama malaikat penjaganya, masing-masing dengan keterangan baik atau kurang baik (bab 158).' },
   { id: 'akad', istilah: 'Saat dan hari akad', arti: 'Saat akad menurut penjaga, pasaran, dan tanggal Jawa (bab 35 dan 36), bintang Suhara (bab 37), serta hari akad tiga jenis menurut urutan hari dalam bulan Jawa (bab 34). Pada Suhara, sebagian hari hanya menyebut satu jam.' },
+  { id: 'tarub', istilah: 'Tarub', arti: 'Tenda atau peneduh yang dipasang untuk hajatan, terutama pernikahan. Kitab memberi tiga cara memilih hari memasangnya (bab 39 sampai 41); pilih salah satu.' },
+  { id: 'tingkeb', istilah: 'Tingkeb', arti: 'Peringatan usia kehamilan tujuh bulan menurut adat. Kitab menyebut harinya Rabu atau Sabtu dengan tanggal Jawa ganjil sebelum 15. Situs ini hanya menghitung tanggalnya.' },
+  { id: 'sepasar-selapan', istilah: 'Sepasar, selapan, tedak siten', arti: 'Sepasar adalah lima hari (satu putaran pasaran). Selapan adalah 35 hari (satu putaran weton). Tedak siten adalah peringatan pada usia tujuh lapan (245 hari). Semuanya jadwal acara adat, bukan jadwal perawatan anak.' },
+  { id: 'naga-kala', istilah: 'Naga, kala, rijalolah', arti: 'Istilah kitab untuk arah yang dihindari (naga dan kala) atau dihormati (rijalolah) saat bepergian. Situs ini hanya melaporkan arahnya menurut kitab.' },
+  { id: 'kala-baya', istilah: 'Kala atau baya, saat, na’as', arti: 'Tiga hitungan waktu berangkat dalam kitab: kala atau baya dari jumlah neptu, saat berangkat menurut jumlah neptu, dan na’as, waktu yang disebut kitab sebagai sial pada hari itu.' },
+  { id: 'depa', istilah: 'Depa', arti: 'Satuan panjang tradisional: rentang kedua lengan terbentang, sekitar 1,7 meter. Dipakai kitab untuk jarak sumur dari tengah rumah.' },
   { id: 'penilaian', istilah: 'Baik, waspada, netral', arti: 'Penilaian ini klasifikasi situs ini agar laporan mudah dibaca, bukan kata kitab. Waspada berarti kitab menyebutnya sebagai hal yang kurang baik.' }
 ];
 
@@ -55,7 +61,9 @@ export const BATAS = [
 export const TIDAK_DIMUAT = [
   'Ritual, sesaji, doa, mantra, penolak, tumbal, dan ramuan.',
   'Watak perempuan menurut weton dan penilaian orang dari penampilan atau ciri tubuh.',
-  'Bagian kitab yang mengaitkan kecacatan anak dengan perilaku orang tuanya.'
+  'Bagian kitab yang mengaitkan kecacatan anak dengan perilaku orang tuanya.',
+  'Tetesan (khitan perempuan) pada jadwal bayi, dan penilaian jam bayi lahir, karena bertentangan dengan anjuran tenaga kesehatan.',
+  'Isi dan tata cara selamatan: pada hajatan hanya tanggal acara yang dihitung.'
 ];
 
 export const PENAFIAN = 'Tafsir adalah tradisi kitab Betaljemur Adammakna yang ditulis ulang, bukan ramalan, kepastian, atau nasihat profesional.';

@@ -33,6 +33,7 @@ describe('aturan teks situs', () => {
     assert.ok(BATAS.some(t => t.includes('8 Juli 1633') && t.includes('25 Agustus 2052')));
     assert.ok(BATAS.some(t => /nasihat medis/.test(t)));
     assert.ok(TIDAK_DIMUAT.some(t => /ritual/i.test(t)));
+    assert.ok(TIDAK_DIMUAT.some(t => /Tetesan/.test(t) && /jam bayi lahir/.test(t)));
     assert.equal(LANGKAH.length, 4);
   });
 });

@@ -140,3 +140,84 @@ export function masukanJodohDariParam(p) {
     wanita: { tanggal: q.get('b'), jam: jb.jam, nama: nama('nb') }
   };
 }
+
+/* ------------------------------------------------------------------ rilis 3: rumah, bepergian, hajatan */
+
+export const ARAH_MATA_ANGIN = ['Utara', 'Timur Laut', 'Timur', 'Tenggara', 'Selatan', 'Barat Daya', 'Barat', 'Barat Laut'];
+export const SISI_RUMAH = ['Utara', 'Timur', 'Selatan', 'Barat'];
+export const MODE_RUMAH = ['arah', 'hari', 'ukuran', 'sumur', 'pintu', 'lahan'];
+export const JENIS_UKURAN = ['usukAkhir', 'usukBangunan', 'rangka', 'tangga1', 'tangga2', 'balai', 'sumur'];
+export const METODE_PINTU = [194, 195, 196];
+export const MODE_HAJATAN = ['tarub', 'tingkeb', 'kehamilan', 'bayi'];
+
+const bilangan = (teks, min, maks) => {
+  if (teks === null || teks === undefined || String(teks).trim() === '') return null;
+  const n = Number(String(teks).trim().replace(',', '.'));
+  return Number.isFinite(n) && n >= min && n <= maks ? n : null;
+};
+
+/** Rumah: k (mode) dan parameter menurut mode. Mengembalikan null bila tidak sah. */
+export function paramDariRumah(m) {
+  const p = new URLSearchParams();
+  p.set('k', m.k);
+  if (m.k === 'arah') {
+    p.set('d', m.tanggal);
+    if (m.jam) p.set('t', m.jam);
+  } else if (m.k === 'hari') p.set('d', m.tanggal);
+  else if (m.k === 'ukuran') { p.set('j', m.jenis); p.set('n', String(m.jumlah)); }
+  else if (m.k === 'sumur') { p.set('h', m.menghadap); p.set('s', m.sumurDi); }
+  else if (m.k === 'pintu') { p.set('m', String(m.metode)); p.set('h', m.menghadap); p.set('p', String(m.panjang)); p.set('x', String(m.posisi)); }
+  return p;
+}
+export function masukanRumahDariParam(p) {
+  const q = params(p);
+  const k = q.get('k');
+  if (!MODE_RUMAH.includes(k)) return null;
+  if (k === 'lahan') return { k };
+  if (k === 'arah') {
+    const j = jamSah(q.get('t'));
+    return tanggalSah(q.get('d')) && j.ok ? { k, tanggal: q.get('d'), jam: j.jam } : null;
+  }
+  if (k === 'hari') return tanggalSah(q.get('d')) ? { k, tanggal: q.get('d') } : null;
+  if (k === 'ukuran') {
+    const n = bilangan(q.get('n'), 1, 99999);
+    return JENIS_UKURAN.includes(q.get('j')) && n !== null && Number.isInteger(n) ? { k, jenis: q.get('j'), jumlah: n } : null;
+  }
+  if (k === 'sumur') {
+    return SISI_RUMAH.includes(q.get('h')) && ARAH_MATA_ANGIN.includes(q.get('s')) ? { k, menghadap: q.get('h'), sumurDi: q.get('s') } : null;
+  }
+  const panjang = bilangan(q.get('p'), 0.01, 100000);
+  const posisi = bilangan(q.get('x'), 0, 100000);
+  const metode = Number(q.get('m'));
+  if (!METODE_PINTU.includes(metode) || !SISI_RUMAH.includes(q.get('h')) || panjang === null || posisi === null || posisi > panjang) return null;
+  return { k, metode, menghadap: q.get('h'), panjang, posisi };
+}
+
+/** Bepergian: d (tanggal) dan g (tujuan arah mata angin, opsional). */
+export function paramDariBepergian(m) {
+  const p = new URLSearchParams();
+  p.set('d', m.tanggal);
+  if (m.tujuan) p.set('g', m.tujuan);
+  return p;
+}
+export function masukanBepergianDariParam(p) {
+  const q = params(p);
+  if (!tanggalSah(q.get('d'))) return null;
+  const g = q.get('g');
+  return { tanggal: q.get('d'), tujuan: ARAH_MATA_ANGIN.includes(g) ? g : null };
+}
+
+/** Hajatan: k (mode), d (tanggal) dan n (nama bayi, opsional). */
+export function paramDariHajatan(m) {
+  const p = new URLSearchParams();
+  p.set('k', m.k);
+  p.set('d', m.tanggal);
+  if (m.k === 'bayi' && m.nama) p.set('n', m.nama);
+  return p;
+}
+export function masukanHajatanDariParam(p) {
+  const q = params(p);
+  const k = q.get('k');
+  if (!MODE_HAJATAN.includes(k) || !tanggalSah(q.get('d'))) return null;
+  return { k, tanggal: q.get('d'), nama: k === 'bayi' ? (q.get('n') || '').trim().slice(0, 60) : '' };
+}

@@ -102,3 +102,29 @@ export function htmlHeroAlat({ id, eyebrow, judul, sub = '', paragraf = '', aksi
     ${samping}
   </section>`;
 }
+
+/** Pilihan tunggal. `opsi`: [{ id, nama }]. */
+export function medanPilihan(id, label, opsi, nilai, petunjuk = '') {
+  return `<div class="medan"><label for="${id}">${esc(label)}</label>
+    <select class="isian" id="${id}">${opsi.map(o => `<option value="${esc(o.id)}"${String(o.id) === String(nilai) ? ' selected' : ''}>${esc(o.nama)}</option>`).join('')}</select>
+    ${petunjuk ? `<p class="petunjuk">${esc(petunjuk)}</p>` : ''}<div class="galat" id="g-${id}" role="alert" hidden></div></div>`;
+}
+
+/** Isian angka (boleh desimal). */
+export function medanAngka(id, label, nilai, { petunjuk = '', inputmode = 'decimal', placeholder = '' } = {}) {
+  return `<div class="medan"><label for="${id}">${esc(label)}</label>
+    <input class="isian" id="${id}" inputmode="${inputmode}" autocomplete="off" placeholder="${esc(placeholder)}" value="${esc(nilai ?? '')}">
+    ${petunjuk ? `<p class="petunjuk">${esc(petunjuk)}</p>` : ''}<div class="galat" id="g-${id}" role="alert" hidden></div></div>`;
+}
+
+export function galatMedan(q, id, pesan) {
+  const el = q(`#g-${id}`);
+  el.hidden = !pesan;
+  el.textContent = pesan || '';
+  q(`#${id}`).setAttribute('aria-invalid', pesan ? 'true' : 'false');
+}
+
+/** Pita catatan penting (mis. kehamilan): selalu terlihat, tidak bisa ditutup. */
+export function htmlPeringatan(teks, ikon = '') {
+  return `<div class="pita-catatan" role="note">${ikon}<p>${esc(teks)}</p></div>`;
+}
