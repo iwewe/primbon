@@ -11,52 +11,15 @@ import {
   weton, kalenderJawa, nomorHari, isoDariNomor, tafsirLahir, watakLanjut, rezeki, kesehatanLahir
 } from '../mesin/index.js';
 import { JAM_MAGRIB } from './masukan.js';
+import { sumberTeks, tafsir, fakta, daftar, bersih } from './butir.js';
+
+export { sumberTeks };
 
 export const CATATAN_TRADISI =
   'Tafsir di laporan ini adalah tradisi kitab Betaljemur Adammakna yang ditulis ulang. Pakailah sebagai bahan renungan, bukan ramalan, kepastian, atau nasihat profesional.';
 
-/** Halaman cetak kitab: [54,55,56] menjadi '54-56'; [60,73,74] menjadi '60, 73-74'. */
-function ringkasHalaman(h) {
-  const a = [...new Set(h)].sort((x, y) => x - y);
-  const out = [];
-  for (let i = 0; i < a.length; ) {
-    let j = i;
-    while (j + 1 < a.length && a[j + 1] === a[j] + 1) j++;
-    out.push(j > i ? `${a[i]}-${a[j]}` : String(a[i]));
-    i = j + 1;
-  }
-  return out.join(', ');
-}
-
-/** Sumber kitab: 'Bab 97, hlm. 54', 'Bab 97 dan 109, hlm. 60, 73-74'. Menerima satu sumber atau daftar sumber. */
-export function sumberTeks(s) {
-  if (Array.isArray(s)) {
-    const ada = s.map(sumberTeks).filter(Boolean);
-    return ada.join('; ');
-  }
-  if (!s || !s.bab) return '';
-  const bab = Array.isArray(s.bab) ? s.bab.join(' dan ') : s.bab;
-  const h = Array.isArray(s.halaman) ? s.halaman : [];
-  return `Bab ${bab}${h.length ? `, hlm. ${ringkasHalaman(h)}` : ''}`;
-}
-
 /** Sumber dari daftar `sumber` tafsirLahir menurut kata kunci topik. */
 const sumberTopik = (t, kata) => (t.sumber || []).find(x => x.topik && x.topik.includes(kata)) ?? null;
-
-const ARAH = { baik: 'baik', buruk: 'waspada', netral: 'netral' };
-const arah = a => ARAH[a] ?? null;
-
-/** Butir tafsir: judul, teks, penilaian arah (baik, waspada, netral), sumber, catatan. */
-const tafsir = (judul, teks, { a = null, sumber = null, catatan = null } = {}) =>
-  teks ? { jenis: 'tafsir', judul, teks, arah: arah(a), sumber: sumberTeks(sumber), catatan } : null;
-/** Butir fakta: pasangan label dan nilai (nilai kosong dilewati). */
-const fakta = (judul, baris, sumber = null) => {
-  const ada = baris.filter(([, v]) => v !== null && v !== undefined && v !== '' && !(Array.isArray(v) && !v.length));
-  return ada.length ? { jenis: 'fakta', judul, baris: ada.map(([k, v]) => [k, Array.isArray(v) ? v.join(', ') : String(v)]), sumber: sumberTeks(sumber) } : null;
-};
-const daftar = (judul, item, sumber = null, catatan = null) =>
-  item.length ? { jenis: 'daftar', judul, item, sumber: sumberTeks(sumber), catatan } : null;
-const bersih = arr => arr.filter(Boolean);
 
 /* ------------------------------------------------------------------ hari Jawa */
 

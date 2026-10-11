@@ -72,3 +72,71 @@ export function masukanDariParam(p) {
   if (!j.ok) return null;
   return { tanggal: d, jam: j.jam, nama: (params.get('n') || '').trim().slice(0, 60) };
 }
+
+/* ------------------------------------------------------------------ alat rilis 2: hari baik, jam, jodoh */
+
+export const UNTUK = ['semua', 'umum', 'nikah', 'bepergian'];
+
+const tanggalSah = d => {
+  if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return false;
+  const [y, m, t] = d.split('-').map(Number);
+  return validasiTanggal(t, m, y).ok;
+};
+const jamSah = t => {
+  const j = bacaJam(t);
+  return j.ok ? { ok: true, jam: j.jam } : { ok: false };
+};
+const params = p => (p instanceof URLSearchParams ? p : new URLSearchParams(p));
+
+/** Hari baik: d (tanggal) dan u (keperluan: semua, umum, nikah, bepergian). */
+export function paramDariHari(m) {
+  const p = new URLSearchParams();
+  p.set('d', m.tanggal);
+  if (m.untuk && m.untuk !== 'semua') p.set('u', m.untuk);
+  return p;
+}
+export function masukanHariDariParam(p) {
+  const q = params(p);
+  if (!tanggalSah(q.get('d'))) return null;
+  const u = q.get('u') || 'semua';
+  return { tanggal: q.get('d'), untuk: UNTUK.includes(u) ? u : 'semua' };
+}
+
+/** Jam: d (tanggal) dan t (jam, opsional). */
+export function paramDariJam(m) {
+  const p = new URLSearchParams();
+  p.set('d', m.tanggal);
+  if (m.jam) p.set('t', m.jam);
+  return p;
+}
+export function masukanJamDariParam(p) {
+  const q = params(p);
+  if (!tanggalSah(q.get('d'))) return null;
+  const j = jamSah(q.get('t'));
+  if (!j.ok) return null;
+  return { tanggal: q.get('d'), jam: j.jam };
+}
+
+/** Jodoh: a, ta, na (pihak pria: tanggal, jam, nama) dan b, tb, nb (pihak wanita). */
+export function paramDariJodoh(m) {
+  const p = new URLSearchParams();
+  p.set('a', m.pria.tanggal);
+  if (m.pria.jam) p.set('ta', m.pria.jam);
+  if (m.pria.nama) p.set('na', m.pria.nama);
+  p.set('b', m.wanita.tanggal);
+  if (m.wanita.jam) p.set('tb', m.wanita.jam);
+  if (m.wanita.nama) p.set('nb', m.wanita.nama);
+  return p;
+}
+export function masukanJodohDariParam(p) {
+  const q = params(p);
+  if (!tanggalSah(q.get('a')) || !tanggalSah(q.get('b'))) return null;
+  const ja = jamSah(q.get('ta'));
+  const jb = jamSah(q.get('tb'));
+  if (!ja.ok || !jb.ok) return null;
+  const nama = k => (q.get(k) || '').trim().slice(0, 60);
+  return {
+    pria: { tanggal: q.get('a'), jam: ja.jam, nama: nama('na') },
+    wanita: { tanggal: q.get('b'), jam: jb.jam, nama: nama('nb') }
+  };
+}

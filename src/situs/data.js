@@ -26,6 +26,12 @@ export const ISTILAH = [
   { id: 'hari-binatang', istilah: 'Hari binatang', arti: 'Setiap tanggal Jawa dikaitkan dengan seekor hewan beserta mutu dan nilainya untuk berbagai urusan (bab 108).' },
   { id: 'perbintangan', istilah: 'Perbintangan', arti: 'Pengelompokan neptu menjadi beberapa bintang (bab 117), masing-masing dengan sekutu, musuh, serta hari dan bulan jaya atau malang. Jaya berarti dianggap beruntung, malang dianggap kurang baik.' },
   { id: 'hanacaraka', istilah: 'Aksara hanacaraka', arti: 'Huruf Jawa. Huruf depan dan belakang nama dialihkan ke aksara ini untuk hitungan nama (bab 114). Alih huruf ini perkiraan.' },
+  { id: 'jodoh-hitungan', istilah: 'Sisa sembilan, sisa empat, pasangan hari', arti: 'Tiga hitungan dasar kecocokan dua orang (bab 15 sampai 17): sisa sembilan dari neptu kedua pihak, sisa empat dari jumlah neptu, dan pasangan hari kelahiran.' },
+  { id: 'golongan-hari', istilah: 'Rahayu, sarju, tidak baik, sangar', arti: 'Kitab membagi hari menurut bulan Jawa ke dalam empat golongan: rahayu (baik), sarju (sedang), tidak baik, dan sangar, yaitu hari yang dilarang untuk hajat tertentu seperti pernikahan.' },
+  { id: 'saat-agung', istilah: 'Saat agung', arti: 'Pembagian siang (pukul 06.00 sampai 18.00) menjadi tujuh saat bernama, misalnya Wiji, Cahya, dan Rejeki yang dianggap baik, serta Pati, Lara, Malaekat, dan Puji yang dihindari (bab 147).' },
+  { id: 'saat-dua-belas', istilah: 'Siang dan malam', arti: 'Pembagian hari menjadi sepuluh bagian, lima di siang dan lima di malam. Nilainya berbeda menurut jumlah neptu hari itu: Ayu, Srilungguh, Srigumelar dianggap baik; Sampar, Pacak, Kala penganten, Kalaluweng dihindari (bab 146).' },
+  { id: 'saat-malaikat', istilah: 'Saat malaikat', arti: 'Pembagian jam siang menurut nama malaikat penjaganya, masing-masing dengan keterangan baik atau kurang baik (bab 158).' },
+  { id: 'akad', istilah: 'Saat dan hari akad', arti: 'Saat akad menurut penjaga, pasaran, dan tanggal Jawa (bab 35 dan 36), bintang Suhara (bab 37), serta hari akad tiga jenis menurut urutan hari dalam bulan Jawa (bab 34). Pada Suhara, sebagian hari hanya menyebut satu jam.' },
   { id: 'penilaian', istilah: 'Baik, waspada, netral', arti: 'Penilaian ini klasifikasi situs ini agar laporan mudah dibaca, bukan kata kitab. Waspada berarti kitab menyebutnya sebagai hal yang kurang baik.' }
 ];
 
@@ -33,7 +39,7 @@ export const LANGKAH = [
   { judul: 'Tanggal menjadi hari Jawa', teks: 'Hari Jawa berganti saat magrib. Bila Anda mengisi jam lahir pukul 18.00 atau sesudahnya, weton dihitung dari hari berikutnya. Tanpa tempat lahir, magrib dianggap pukul 18.00.' },
   { judul: 'Weton, neptu, wuku, dan tanggal Jawa', teks: 'Hari dan pasaran dihitung dari nomor hari berurutan. Wuku berputar tiap 210 hari. Tanggal Jawa dihitung menurut kalender Sultan Agungan Keraton Ngayogyakarta.' },
   { judul: 'Tafsir dari kitab', teks: 'Setiap hasil dicari pada tabel kitab Betaljemur Adammakna: watak, lambang, tanggal dan bulan, neptu, nama, rezeki, dan kesehatan.' },
-  { judul: 'Disusun menjadi laporan', teks: 'Butir tafsir dikelompokkan per bagian, diberi penilaian baik, waspada, atau netral, dan memuat rujukan bab dan halaman.' }
+  { judul: 'Disusun menjadi laporan', teks: 'Butir tafsir dikelompokkan per bagian, diberi penilaian baik, waspada, atau netral, dan memuat rujukan bab dan halaman. Jodoh, hari baik, dan jam memakai cara yang sama untuk dua orang, satu tanggal, dan satu hari.' }
 ];
 
 export const BATAS = [
@@ -42,7 +48,8 @@ export const BATAS = [
   'Tanpa tempat lahir, magrib dianggap pukul 18.00; orang yang lahir dekat magrib mungkin mendapat weton hari sebelum atau sesudahnya.',
   'Bagian yang bergantung pada tanggal dan bulan Jawa bisa bergeser sehari bila kalender dihitung dengan cara lain.',
   'Alih huruf nama ke aksara hanacaraka adalah perkiraan, dan komponen nama hanya dikenali dari daftar kitab.',
-  'Keterangan kesehatan adalah kepercayaan tradisional, bukan nasihat medis.'
+  'Keterangan kesehatan adalah kepercayaan tradisional, bukan nasihat medis. Hasil jodoh, hari baik, dan jam bukan nasihat pernikahan atau profesional; hasil bernada buruk bukan larangan.',
+  'Hari yang tidak punya catatan dalam kitab berarti kitab tidak menyebutnya, bukan berarti hari itu baik.'
 ];
 
 export const TIDAK_DIMUAT = [

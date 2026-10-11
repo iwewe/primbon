@@ -5,6 +5,7 @@
 import './css/situs.css';
 import { tandaMerek, IKON } from './logo.js';
 import { buatRouter } from './router.js';
+import { sekarangLokal } from './format.js';
 import { bukaBeranda } from './tampilan/beranda.js';
 import { bukaTentang, bukaIstilah, bukaTidakAda } from './tampilan/statis.js';
 
@@ -38,8 +39,10 @@ function gantiTema() {
 /* ------------------------------------------------------------ kerangka */
 const MENU = [
   { jalur: '/', nama: 'Laporan', ikon: 'weton', aktif: ['/', '/laporan'] },
-  { jalur: '/istilah', nama: 'Istilah', ikon: 'metode', aktif: ['/istilah'] },
-  { jalur: '/tentang', nama: 'Tentang', ikon: 'info', aktif: ['/tentang'] }
+  { jalur: '/jodoh', nama: 'Jodoh', ikon: 'pembanding', aktif: ['/jodoh'] },
+  { jalur: '/hari', nama: 'Hari baik', ikon: 'kalender', aktif: ['/hari'] },
+  { jalur: '/jam', nama: 'Jam', ikon: 'jam', aktif: ['/jam'] },
+  { jalur: '/tentang', nama: 'Tentang', ikon: 'info', aktif: ['/tentang', '/istilah'] }
 ];
 
 function kerangka() {
@@ -49,6 +52,7 @@ function kerangka() {
     <a class="merek" href="/" aria-label="Primbon, ke beranda">${tandaMerek(32)}<span class="merek-teks"><span class="merek-nama">IWEWE</span><span class="merek-sub">Primbon</span></span></a>
     <nav class="nav-atas" aria-label="Navigasi utama">${MENU.map(m => `<a href="${m.jalur}" data-menu="${m.jalur}">${m.nama}</a>`).join('')}</nav>
     <div class="atas-kanan">
+      <a class="tautan-atas" href="/istilah">Istilah</a>
       <button class="tombol-ikon" id="tema" type="button">${`<span class="i-bulan">${IKON.bulan(20)}</span><span class="i-matahari">${IKON.matahari(20)}</span>`}</button>
     </div>
   </div></header>
@@ -78,25 +82,32 @@ function toast(pesan) {
   setTimeout(() => el.remove(), 2600);
 }
 
-/* ------------------------------------------------------------ laporan (dimuat malas) */
-// Mesin tafsir dan datanya hanya dimuat saat laporan dibuka, agar beranda tetap ringan.
-let muatLaporan = 0;
-function bukaLaporanMalas(akar) {
-  const giliran = ++muatLaporan;
-  akar.innerHTML = '<div class="halaman"><h1 class="judul-halaman" tabindex="-1" role="status">Menyusun laporan…</h1></div>';
-  import('./tampilan/laporan.js')
+/* ------------------------------------------------------------ halaman tafsir (dimuat malas) */
+// Mesin tafsir dan datanya hanya dimuat saat halaman tafsir dibuka, agar beranda tetap ringan.
+const MALAS = {
+  '/laporan': { judul: 'Menyusun laporan…', impor: () => import('./tampilan/laporan.js'), fungsi: 'bukaLaporan' },
+  '/jodoh': { judul: 'Memuat jodoh…', impor: () => import('./tampilan/jodoh.js'), fungsi: 'bukaJodoh' },
+  '/hari': { judul: 'Memuat hari baik…', impor: () => import('./tampilan/hari.js'), fungsi: 'bukaHari' },
+  '/jam': { judul: 'Memuat jam…', impor: () => import('./tampilan/jam.js'), fungsi: 'bukaJam' }
+};
+let muatTerakhir = 0;
+function bukaMalas(jalur, akar) {
+  const { judul, impor, fungsi } = MALAS[jalur];
+  const giliran = ++muatTerakhir;
+  akar.innerHTML = `<div class="halaman"><h1 class="judul-halaman" tabindex="-1" role="status">${judul}</h1></div>`;
+  impor()
     .then(m => {
       // Pengguna sudah pindah halaman selama modul dimuat: jangan menimpa halaman lain.
-      if (giliran === muatLaporan && /^\/laporan\/?$/.test(location.pathname)) m.bukaLaporan(akar, ctx);
+      if (giliran === muatTerakhir && location.pathname.replace(/\/+$/, '') === jalur) m[fungsi](akar, ctx);
     })
     .catch(() => {
-      if (giliran !== muatLaporan) return;
-      akar.innerHTML = '<div class="halaman"><div class="kartu"><h1 class="judul-halaman" tabindex="-1">Laporan belum dapat dimuat</h1><p class="lead">Bagian ini perlu diunduh dan tampaknya sambungan internet terputus. Coba lagi setelah tersambung.</p><p class="jarak-atas"><a class="btn btn-polos" href="/">Kembali ke beranda</a></p></div></div>';
+      if (giliran !== muatTerakhir) return;
+      akar.innerHTML = '<div class="halaman"><div class="kartu"><h1 class="judul-halaman" tabindex="-1">Halaman belum dapat dimuat</h1><p class="lead">Bagian ini perlu diunduh dan tampaknya sambungan internet terputus. Coba lagi setelah tersambung.</p><p class="jarak-atas"><a class="btn btn-polos" href="/">Kembali ke beranda</a></p></div></div>';
     });
 }
 
 /* ------------------------------------------------------------ mulai */
-const ctx = { navigasi: null, toast };
+const ctx = { sekarang: () => sekarangLokal(), navigasi: null, toast };
 
 function mulai() {
   kerangka();
@@ -105,7 +116,10 @@ function mulai() {
     akar,
     rute: {
       '/': a => bukaBeranda(a, ctx),
-      '/laporan': a => bukaLaporanMalas(a),
+      '/laporan': a => bukaMalas('/laporan', a),
+      '/jodoh': a => bukaMalas('/jodoh', a),
+      '/hari': a => bukaMalas('/hari', a),
+      '/jam': a => bukaMalas('/jam', a),
       '/istilah': a => bukaIstilah(a, ctx),
       '/tentang': a => bukaTentang(a, ctx)
     },

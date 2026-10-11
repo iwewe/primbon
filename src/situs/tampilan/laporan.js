@@ -7,35 +7,7 @@ import { masukanDariParam, paramDariAlamat, paramDariMasukan } from '../masukan.
 import { bangunLaporan } from '../laporan.js';
 import { weton, nomorHari, isoDariNomor } from '../../mesin/index.js';
 import { IKON } from '../logo.js';
-
-const TAG = { baik: 'Baik', waspada: 'Waspada', netral: 'Netral' };
-const tag = a => (a && TAG[a] ? `<span class="tag tag-${a}">${TAG[a]}</span>` : '');
-
-function htmlButir(b) {
-  const meta = [b.sumber ? `Sumber: ${esc(b.sumber)}` : '', b.catatan ? esc(b.catatan) : ''].filter(Boolean).join(' &middot; ');
-  const metaHtml = meta ? `<p class="meta">${meta}</p>` : '';
-  if (b.jenis === 'tafsir') return `<article class="butir"><h3>${esc(b.judul)} ${tag(b.arah)}</h3><p>${esc(b.teks)}</p>${metaHtml}</article>`;
-  if (b.jenis === 'fakta') {
-    return `<article class="butir"><h3>${esc(b.judul)}</h3><dl class="rincian">${b.baris.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>${metaHtml}</article>`;
-  }
-  if (b.jenis === 'daftar') {
-    return `<article class="butir"><h3>${esc(b.judul)}</h3><ul class="daftar-item">${b.item.map(i => `<li><span>${esc(i.teks)}</span>${tag(i.arah)}</li>`).join('')}</ul>${metaHtml}</article>`;
-  }
-  if (b.jenis === 'tabel') {
-    const kepala = b.kolom.map(k => `<th scope="col">${esc(k)}</th>`).join('');
-    const isi = b.baris.map(r => `<tr><th scope="row">${esc(r[0])}</th>${r.slice(1).map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('');
-    return `<article class="butir"><h3>${esc(b.judul)}</h3><table class="tabel-lambang"><caption class="sr">${esc(b.judul)}</caption><thead><tr>${kepala}</tr></thead><tbody>${isi}</tbody></table>${metaHtml}</article>`;
-  }
-  return '';
-}
-
-function htmlBagian(s) {
-  return `<section class="kartu bagian" id="${esc(s.id)}" aria-labelledby="h-${esc(s.id)}">
-    <h2 id="h-${esc(s.id)}">${esc(s.judul)}</h2>
-    ${s.pengantar ? `<p class="lead">${esc(s.pengantar)}</p>` : ''}
-    <div class="butir-daftar">${s.butir.map(htmlButir).join('')}</div>
-  </section>`;
-}
+import { htmlBagian, tag } from './komponen.js';
 
 function kalimatMagrib(l) {
   const m = l.masukan;

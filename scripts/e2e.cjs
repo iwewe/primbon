@@ -116,7 +116,7 @@ const lahir = 'd=1990-05-17&t=19:00&n=Wirya';
     const { ctx, p } = await baru({ viewport: { width: 390, height: 800 } });
     await p.goto(BASE + '/laporan#' + lahir, { waitUntil: 'networkidle' });
     await p.waitForSelector('#judul-laporan');
-    ok('ponsel: navigasi bawah memuat tiga item', (await p.$$eval('.nav-bawah a', e => e.length)) === 3);
+    ok('ponsel: navigasi bawah memuat lima item', (await p.$$eval('.nav-bawah a', e => e.length)) === 5);
     ok('ponsel: tanpa gulir horizontal pada halaman', await p.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
     await ctx.close();
   }
@@ -132,6 +132,94 @@ const lahir = 'd=1990-05-17&t=19:00&n=Wirya';
     await p.goto(BASE + '/', { waitUntil: 'networkidle' });
     await p.click('#tema');
     ok('tema: tombol mengganti ke terang dan menyimpannya', (await p.getAttribute('html', 'data-theme')) === 'light' && (await p.evaluate(() => localStorage.getItem('primbon.tema'))) === 'light');
+    await ctx.close();
+  }
+
+  /* Rilis 2: Jodoh, Hari baik, Jam */
+  {
+    const { ctx, p } = await baru();
+    await p.goto(BASE + '/', { waitUntil: 'networkidle' });
+    ok('beranda: tiga alat lain tertaut', (await p.$$eval('.alat-lain a', a => a.map(x => x.getAttribute('href')).join())) === '/jodoh,/hari,/jam');
+    ok('menu atas memuat Jodoh, Hari baik, Jam dan tautan Istilah', (await p.$$eval('.nav-atas a', a => a.map(x => x.textContent).join('|'))) === 'Laporan|Jodoh|Hari baik|Jam|Tentang' && (await p.isVisible('.tautan-atas')));
+    /* Jodoh */
+    await p.click('.alat-lain a[href="/jodoh"]');
+    await p.waitForSelector('#form-jodoh');
+    ok('jodoh: judul dokumen dan nama kedua pihak', (await p.title()) === 'Jodoh · Primbon' && (await p.$$eval('.pihak h3', h => h.map(x => x.textContent).join('|'))) === 'Pihak pria|Pihak wanita');
+    await p.click('#form-jodoh button[type=submit]');
+    ok('jodoh: tanpa isian memberi galat dan fokus ke tahun pihak pria', (await p.isVisible('#g-pria')) && (await p.evaluate(() => document.activeElement.id)) === 'pria-thn');
+    await p.fill('#pria-nama', 'Budi Santoso'); await p.fill('#pria-tgl', '17'); await p.selectOption('#pria-bln', '5'); await p.fill('#pria-thn', '1990');
+    await p.click('#form-jodoh button[type=submit]');
+    ok('jodoh: pihak wanita yang kosong ditolak', (await p.isVisible('#g-wanita')) && (await p.evaluate(() => document.activeElement.id)) === 'wanita-thn');
+    await p.fill('#wanita-nama', 'Siti Aminah'); await p.fill('#wanita-tgl', '3'); await p.selectOption('#wanita-bln', '11'); await p.fill('#wanita-thn', '1992'); await p.fill('#wanita-jam', '19.00');
+    await p.click('#form-jodoh button[type=submit]');
+    await p.waitForSelector('#judul-jodoh');
+    await p.waitForSelector('#dasar');
+    ok('jodoh: alamat memakai fragmen, bukan query', /\/jodoh#.*a=1990-05-17.*b=1992-11-03/.test(p.url()) && !p.url().includes('?'), p.url());
+    ok('jodoh: weton kedua pihak (wanita lahir 19.00 digeser ke Rabu Pahing)', (await teks(p, '#judul-jodoh')) === 'Kamis Kliwon dan Rabu Pahing', await teks(p, '#judul-jodoh'));
+    ok('jodoh: tiga bagian (dasar, weton, nama) dengan sumber bab', (await p.$$eval('.bagian > h2', e => e.map(x => x.textContent).join('|'))) === 'Hitungan dasar|Neptu weton dan tanggal Jawa|Huruf nama' && (await p.$$eval('.butir .meta', e => e.filter(x => /Sumber: Bab \d+/.test(x.textContent)).length)) >= 10);
+    ok('jodoh: catatan keputusan milik pengguna tampil', (await teks(p, '#h-baca + .lead')).includes('milik Anda berdua'));
+    ok('jodoh: penilaian berupa teks', (await p.$$eval('.butir .tag', e => e.every(x => ['Baik', 'Waspada', 'Netral'].includes(x.textContent)))));
+    await p.click('.ubah-data summary');
+    ok('jodoh: "Ubah data" membuka formulir terisi', (await p.inputValue('#pria-nama')) === 'Budi Santoso' && (await p.inputValue('#wanita-jam')) === '19.00' && (await p.inputValue('#wanita-thn')) === '1992');
+    ok('jodoh: tanpa galat skrip', p.galat.length === 0, p.galat.join('|'));
+    const luarJ = [...new Set(p.urls.map(u => new URL(u).host))].filter(h => h !== new URL(BASE).host && h !== 'static.cloudflareinsights.com');
+    ok('privasi: jodoh tanpa host luar dan tanpa permintaan berisi data lahir atau nama', luarJ.length === 0 && p.urls.every(u => !/1990-05-17|1992-11-03|Budi|Siti|19[:.]00/.test(decodeURIComponent(u))), luarJ.join(','));
+    await p.reload({ waitUntil: 'networkidle' });
+    await p.waitForSelector('#judul-jodoh');
+    ok('jodoh: muat ulang mempertahankan hasil', (await teks(p, '#judul-jodoh')) === 'Kamis Kliwon dan Rabu Pahing');
+    await ctx.close();
+  }
+  {
+    const { ctx, p } = await baru();
+    /* Hari baik */
+    await p.goto(BASE + '/hari', { waitUntil: 'networkidle' });
+    await p.waitForSelector('#judul-hari');
+    ok('hari: tanpa data memakai hari ini (Minggu Legi, 11 Oktober 2026)', (await teks(p, '#judul-hari')) === 'Minggu Legi' && (await p.inputValue('#hari-tgl')) === '11' && (await p.inputValue('#hari-thn')) === '2026', await teks(p, '#judul-hari'));
+    await p.fill('#hari-tgl', '20'); await p.selectOption('#hari-untuk', 'nikah');
+    await p.click('#form-hari button[type=submit]');
+    await p.waitForFunction(() => document.querySelector('#judul-hari')?.textContent === 'Selasa Kliwon');
+    ok('hari: alamat memuat tanggal dan keperluan di fragmen', /\/hari#d=2026-10-20&u=nikah/.test(p.url()) && !p.url().includes('?'), p.url());
+    ok('hari: pernikahan 20 Okt 2026 = satu waspada satu netral, bergantung tanggal Jawa', (await teks(p, '#hari-nikah')).includes('1 waspada') && (await teks(p, '#hari-nikah')).includes('1 netral') && (await teks(p, '#hari-nikah')).includes('Bergantung tanggal Jawa'), await teks(p, '#hari-nikah'));
+    ok('hari: daftar 14 hari dengan baris hari terpilih ditandai', (await p.$$eval('#daftar-hari tbody tr', r => r.length)) === 14 && (await p.$$eval('#daftar-hari tr.kini', r => r.length)) === 1);
+    await p.click('#daftar-hari tbody tr:nth-child(3) a');
+    await p.waitForFunction(() => document.querySelector('#judul-hari')?.textContent === 'Kamis Wage' || document.querySelector('#judul-hari')?.textContent === 'Kamis Pahing' || /Kamis/.test(document.querySelector('#judul-hari')?.textContent || ''));
+    ok('hari: klik tanggal di daftar menampilkan rincian hari itu (tanpa memuat ulang halaman)', /d=2026-10-22/.test(p.url()) && (await teks(p, '#judul-hari')) === 'Kamis Pahing', p.url() + ' ' + await teks(p, '#judul-hari'));
+    await p.click('#daftar-hari .aksi-halaman a:has-text("sesudahnya")');
+    await p.waitForFunction(() => /d=2026-11-05/.test(location.hash));
+    ok('hari: tombol 14 hari sesudahnya maju dua pekan', /d=2026-11-05/.test(p.url()));
+    await p.goBack();
+    ok('hari: tombol mundur kembali ke tanggal sebelumnya', /d=2026-10-22/.test(p.url()));
+    await p.goto(BASE + '/hari#d=2052-08-20', { waitUntil: 'networkidle' });
+    await p.waitForSelector('#judul-hari');
+    ok('hari: di ujung rentang daftar berhenti dan tombol maju hilang', (await p.$$eval('#daftar-hari tbody tr', r => r.length)) === 6 && (await p.$$eval('#daftar-hari .aksi-halaman a', a => a.every(x => !/sesudahnya/.test(x.textContent)))));
+    await p.goto(BASE + '/hari#d=1500-01-01', { waitUntil: 'networkidle' });
+    await p.waitForSelector('#judul-hari');
+    ok('hari: alamat tidak sah jatuh ke hari ini, bukan galat', (await teks(p, '#judul-hari')) === 'Minggu Legi');
+    ok('hari: tanpa galat skrip', p.galat.length === 0, p.galat.join('|'));
+    /* Jam */
+    await p.goto(BASE + '/jam', { waitUntil: 'networkidle' });
+    await p.waitForSelector('#judul-jam');
+    ok('jam: enam bagian tanpa jam, tidak ada baris bertanda', (await p.$$eval('.bagian > h2', e => e.length)) === 6 && (await p.$$eval('.penanda-kini', e => e.length)) === 0);
+    await p.click('#jam-sekarang');
+    ok('jam: tombol "Pakai jam sekarang" mengisi 12.00 (waktu terkunci)', (await p.inputValue('#jam-isi')) === '12.00', await p.inputValue('#jam-isi'));
+    await p.fill('#jam-hari-tgl', '17'); await p.fill('#jam-isi', '09.30');
+    await p.click('#form-jam button[type=submit]');
+    await p.waitForSelector('#pada-jam');
+    ok('jam: alamat memuat tanggal dan jam di fragmen', /\/jam#d=2026-10-17&t=09%3A30|\/jam#d=2026-10-17&t=09:30/.test(p.url()) && !p.url().includes('?'), p.url());
+    ok('jam: Sabtu Pahing, saat Cahya ditandai "jam Anda"', (await teks(p, '#judul-jam')) === 'Sabtu Pahing' && (await p.$$eval('#saat-agung tr.kini', r => r.length === 1 && /Cahya/.test(r[0].textContent))) && (await teks(p, '#pada-jam')).includes('Cahya'));
+    ok('jam: jam tidak valid ditolak', await (async () => { await p.fill('#jam-isi', '25.00'); await p.click('#form-jam button[type=submit]'); return (await teks(p, '#g-jam-isi')).includes('Jam tidak valid'); })());
+    ok('jam: tanpa galat skrip', p.galat.length === 0, p.galat.join('|'));
+    await ctx.close();
+  }
+  {
+    const { ctx, p } = await baru({ viewport: { width: 320, height: 800 } });
+    for (const jalur of ['/jodoh#a=1990-05-17&na=Budi&b=1992-11-03&nb=Siti', '/hari#d=2026-10-17&u=nikah', '/jam#d=2026-10-17&t=09:30']) {
+      await p.goto(BASE + jalur, { waitUntil: 'networkidle' });
+      await p.waitForSelector('h1');
+      await p.waitForTimeout(200);
+      ok(`ponsel 320: ${jalur.split('#')[0]} tanpa gulir horizontal`, await p.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), await p.evaluate(() => document.documentElement.scrollWidth));
+    }
+    ok('ponsel 320: tabel jam menjadi kartu bertumpuk (label kolom tampil)', await p.evaluate(() => getComputedStyle(document.querySelector('.tabel-bertumpuk td'), '::before').content !== 'none'));
     await ctx.close();
   }
 

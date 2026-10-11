@@ -27,6 +27,7 @@ export const IKON = {
   kalender: ukuran => ikon('<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>', ukuran),
   pembanding: ukuran => ikon('<circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/>', ukuran),
   metode: ukuran => ikon('<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/>', ukuran),
+  jam: ukuran => ikon('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', ukuran),
   bulan: ukuran => ikon('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>', ukuran),
   matahari: ukuran => ikon('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>', ukuran),
   kanan: ukuran => ikon('<path d="M9 5l7 7-7 7"/>', ukuran),

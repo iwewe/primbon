@@ -21,6 +21,13 @@ Tata letak, warna, huruf, ilustrasi, ornamen, ikon, gerak, dan bentuk daftar isi
 (lambang hari dan pasaran). Perubahan tampilan tidak perlu menyentuh model.
 
 ## Halaman
-Beranda (pengantar dan formulir) · Laporan (hero weton, ringkasan lima fakta, daftar isi, tujuh bagian) · Istilah · Tentang · 404.
+Beranda (pengantar, tautan alat, formulir) · Laporan (hero weton, ringkasan lima fakta, daftar isi, tujuh bagian) · Jodoh (dua formulir pihak,
+tiga bagian hasil) · Hari baik (formulir, rincian per keperluan, daftar 14 hari) · Jam (formulir, enam tabel saat, baris yang memuat jam pengguna ditandai) ·
+Istilah · Tentang · 404.
+
+Model alat (`alat.js`) memakai butir yang sama dengan laporan, ditambah `ringkasan` ({baik, waspada, netral}) per bagian dan `tanda` pada butir tabel
+(baris yang ditandai). Tabel jam memakai kelas `.tabel-bertumpuk`: tabel di layar lebar, kartu bertumpuk dengan label kolom di ponsel.
+Bahan visual yang cocok untuk tim: garis waktu 06.00-18.00 dan 18.00-06.00 untuk Saat agung dan Siang dan malam (saat ini hanya tabel),
+dan susunan dua kolom untuk Jodoh. Hati-hati dengan butir bernada berat (mis. "Salah satu meninggal" pada hitungan sisa empat): perlakuan visualnya harus tenang.
 Pertimbangan yang terbuka: tanda merek (saat ini memakai cincin 30 garis milik Pawukon), gambar OG, dan cara memperkenalkan lapisan tafsir yang bisa
 saling bertentangan.

@@ -24,6 +24,12 @@ function htmlHero() {
     <p class="pengantar">Laporan tafsir dari hari kelahiran Anda menurut kitab Betaljemur Adammakna. Masukkan tanggal lahir; weton, wuku, dan tanggal Jawa dihitung lalu disusun menjadi satu laporan.</p>
     <ul class="isi-laporan" aria-label="Isi laporan">${ISI.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
     <a class="contoh" href="/laporan#d=1945-08-17&n=Contoh">Lihat contoh laporan</a>
+    <nav class="alat-lain" aria-label="Alat lain">
+      <h2>Alat lain</h2>
+      <a href="/jodoh"><b>Jodoh</b><span>Kecocokan dua weton dan nama</span></a>
+      <a href="/hari"><b>Hari baik</b><span>Tinjau satu tanggal untuk suatu keperluan</span></a>
+      <a href="/jam"><b>Jam</b><span>Saat baik dan buruk pada suatu hari</span></a>
+    </nav>
   </section>`;
 }
 
