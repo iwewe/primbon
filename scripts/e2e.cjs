@@ -14,7 +14,8 @@ const lahir = 'd=1990-05-17&t=19:00&n=Wirya';
     await p.clock.setFixedTime(TETAP);
     p.galat = []; p.urls = [];
     p.on('pageerror', e => p.galat.push(e.message));
-    p.on('console', m => { if (m.type() === 'error') p.galat.push(m.text().slice(0, 120)); });
+    // Cloudflare menyisipkan skrip analitik di tepi jaringan; CSP ketat memblokirnya (itu yang diinginkan), jadi pesan khusus itu bukan galat situs.
+    p.on('console', m => { if (m.type() === 'error' && !/static\.cloudflareinsights\.com/.test(m.text())) p.galat.push(m.text().slice(0, 120)); });
     p.on('request', r => p.urls.push(r.url()));
     return { ctx, p };
   };
